@@ -7,13 +7,13 @@ from twilio.rest import Client
 app = Flask(__name__)
 
 def weather_alert():
-    account_sid = "AC66ab645970868cf3faeda1738b7ce4ac"
-    auth_token = "9afd3ad4acf217a5a94125e8ebbc0234"
+    account_sid = os.environ.get("TWILIO_ACCOUNT_SID")
+    auth_token = os.environ.get("TWILIO_AUTH_TOKEN")
     client = Client(account_sid, auth_token)
 
     #return f"Connected to Twilio Account: {client.api.accounts(account_sid).fetch().friendly_name}"
 
-    api_kay = "afdecab46fea1c76b8e64294dcc705b4"
+    api_kay = os.environ.get("OWM_API_KEY")
     url = "https://api.openweathermap.org/data/2.5/forecast"
 
     #   WE GET THE LAT AND LONG OF OUR LOCATION AND CREATE A DICTIONARY TO HOLD IT
