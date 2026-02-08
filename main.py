@@ -32,26 +32,32 @@ def weather_alert():
     weather_data = response.json()
     current_weather_dic = weather_data["list"][0]["weather"][0]
 
-    # we get a list of the data for the 5 days
     list_weather_data = weather_data["list"]
-    # we also get the description
-    weather_description = current_weather_dic["description"]
-    # we loop through the list_weather_data
     will_rain = False
+    # We start our message with a header
+    message_body = "Rain Alert for Today! ☔\n"
 
+    # 2. Loop through all slots to find rain and build the list
     for weather in list_weather_data:
         weather_id = weather["weather"][0]["id"]
-       # We get weather description for each item
-        current_weather_description = weather["weather"][0]["description"]
-
+        
         if int(weather_id) < 700:
             will_rain = True
-            break
+            
+            # Extract time and description
+            time_raw = weather["dt_txt"] # e.g., "2026-02-08 12:00:00"
+            # Get just the hour/minute: "12:00"
+            time_short = time_raw.split(" ")[1][:5]
+            description = weather["weather"][0]["description"]
+            
+            # Add this specific rain slot to our message
+            message_body += f"\n- {time_short}: {description.capitalize()}"
     if will_rain:
-            message = client.messages.create(
+        message_body += "\n\nDon't forget your umbrella! 🧥"
+        message = client.messages.create(
                 from_='whatsapp:+14155238886',
                 to='whatsapp:+905338620109',
-                body=f'The weather description says: {current_weather_description}, take an umbrella',
+                body=message_body,
             )
             return  message.status
     else:
